@@ -1,5 +1,5 @@
 const express = require('express');
-const session = require('express-session');
+const cookieSession = require('cookie-session');
 const cookieparser = require('cookie-parser');
 const app = express();
 const multer = require('multer');
@@ -12,17 +12,14 @@ const upload = multer({storage:multer.memoryStorage()})
 
 app.use(cookieparser());
 app.use(express.json())
-app.use(session({
-    secret:'trolololo',
-    resave: false,
-        saveUninitialized: true,
-        cookie: {
-            path: '/',
-            httpOnly: true,
-            secure: false,
-            maxAge: null,
-    }
-}));
+app.set('trust proxy', 1) // trust first proxy
+
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}))
+
+
 
 const corsOptions = {
     'origin': true,
