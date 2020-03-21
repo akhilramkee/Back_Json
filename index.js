@@ -1,7 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const cookieparser = require('cookie-parser');
-const app=express().use('*', cors());
+const app = express();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -18,6 +18,8 @@ app.use(session({
     saveUninitialized:false,
     secret:'trolololo',
 }));
+
+app.use(cors({credentials:true,origin:'http://localhost:3000'}))
 
 app.use(express.urlencoded({extended:false}))
 
