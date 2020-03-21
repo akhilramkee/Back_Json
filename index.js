@@ -1,12 +1,11 @@
 const express = require('express');
 const session = require('express-session');
 const cookieparser = require('cookie-parser');
-const app = express();
+const app=express().use('*', cors());
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 var cors = require('cors');
-var MemcachedStore = require('connect-memjs')(session);
 
 
 
@@ -18,13 +17,7 @@ app.use(session({
     resave:false,
     saveUninitialized:false,
     secret:'trolololo',
-    store: new MemcachedStore({
-        servers: [process.env.MEMCACHIER_SERVERS],
-        prefix: '_session_'
-    })
 }));
-
-app.use(cors({credentials:true,origin:'http://localhost:3000'}))
 
 app.use(express.urlencoded({extended:false}))
 
