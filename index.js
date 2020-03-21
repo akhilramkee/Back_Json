@@ -4,20 +4,9 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+let jsonData = {};
 
-const directoryPath = path.join(__dirname,'uploads');
-var X_files = [];
-
-var storage = multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null,'./uploads');
-    },
-    filename:(req,file,cb)=>{
-        cb(null,file.originalname)
-    }
-});
-
-const upload = multer({storage:storage})
+const upload = multer({storage:multer.memoryStorage()})
 
 app.use(express.json())
 app.use((req,res,next)=>{
@@ -33,8 +22,10 @@ app.get('/',(req,res)=>{
 })
 
 app.post('/upload',upload.single('file'),(req,res)=>{
-    X_files.push(req.file.originalname);
-    res.json(X_files);
+    let key = req.file.originalname.replace('.json','');
+    let value = JSON.parse(req.file.buffer.toString('utf-8'));
+    jsonData[key] = value;
+    res.json(jsonData)
 });
 
 const PORT = process.env.PORT ||5000;
