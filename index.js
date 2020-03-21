@@ -31,12 +31,14 @@ app.get('/',(req,res)=>{
 
 app.post('/upload',upload.single('file'),(req,res)=>{
     if(!req.session.jsonData){
+        req.session.count = 0
         req.session.jsonData ={}
     }
     let key = req.file.originalname.replace('.json','');
     let value = JSON.parse(req.file.buffer.toString('utf-8'));
     req.session.jsonData[key] = value;
-    res.status(200).json(req.session.jsonData);
+    req.session.count+=1
+    res.status(200).json(req.session.count);
 });
 
 /*
