@@ -1,14 +1,23 @@
 const express = require('express');
+const session = require('express-session');
+const cookieparser = require('cookie-parser');
 const app = express();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-let jsonData = {};
 
 const upload = multer({storage:multer.memoryStorage()})
 
+
+app.use(cookieparser());
 app.use(express.json())
+app.use(session({
+    resave:false,
+    saveUninitialized:false,
+    secret:'trolololo',
+    cookie:{maxAge:100}
+}));
 app.use((req,res,next)=>{
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control-Allow-Header","Origin,X-Requested-With,Content-Type,Accept");
@@ -22,10 +31,13 @@ app.get('/',(req,res)=>{
 })
 
 app.post('/upload',upload.single('file'),(req,res)=>{
+    if(!req.session.jsonData){
+        req.session.jsonData ={}
+    }
     let key = req.file.originalname.replace('.json','');
     let value = JSON.parse(req.file.buffer.toString('utf-8'));
-    jsonData[key] = value;
-    res.json(jsonData)
+    req.session.jsonData[key] = value;
+    res.status(200).json(req.session.jsonData);
 });
 
 const PORT = process.env.PORT ||5000;
