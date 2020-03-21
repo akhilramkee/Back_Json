@@ -14,6 +14,14 @@ app.use(cookieparser());
 app.use(express.json())
 app.use(session({
     secret:'trolololo',
+    resave: false,
+        saveUninitialized: true,
+        cookie: {
+            path: '/',
+            httpOnly: true,
+            secure: false,
+            maxAge: null,
+    }
 }));
 
 const corsOptions = {
