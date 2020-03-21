@@ -16,8 +16,8 @@ app.use(session({
     resave:false,
     saveUninitialized:false,
     secret:'trolololo',
-    cookie:{maxAge:100}
 }));
+
 app.use((req,res,next)=>{
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control-Allow-Header","Origin,X-Requested-With,Content-Type,Accept");
@@ -39,6 +39,13 @@ app.post('/upload',upload.single('file'),(req,res)=>{
     req.session.jsonData[key] = value;
     res.status(200).json(req.session.jsonData);
 });
+
+app.get('/purge',(req,res)=>{
+    if(req.session.jsonData){
+        req.session.jsonData = {};
+    }
+    res.status(200).send("Purged")
+})
 
 const PORT = process.env.PORT ||5000;
 app.listen(PORT,()=>{
