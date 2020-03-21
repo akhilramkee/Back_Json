@@ -5,6 +5,7 @@ const app = express();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+var cors = require('cors');
 
 
 const upload = multer({storage:multer.memoryStorage()})
@@ -17,13 +18,7 @@ app.use(session({
     secret:'trolololo',
 }));
 
-app.use((req,res,next)=>{
-    res.header("Access-Control-Allow-Origin","*");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-    res.header("Access-Control-Allow-Header","Origin,X-Requested-With,Content-Type,Accept");
-    res.header("Access-Control-Allow-Credentials",true);
-    next();
-});
+app.use(cors({credentials:true,origin:'http://localhost:3000'}))
 
 app.use(express.urlencoded({extended:false}))
 
@@ -33,14 +28,12 @@ app.get('/',(req,res)=>{
 
 app.post('/upload',upload.single('file'),(req,res)=>{
     if(!req.session.jsonData){
-        req.session.count = 0
         req.session.jsonData ={}
     }
     let key = req.file.originalname.replace('.json','');
     let value = JSON.parse(req.file.buffer.toString('utf-8'));
     req.session.jsonData[key] = value;
-    req.session.count+=1
-    res.status(200).json(req.session.count);
+    res.status(200).json(req.session.jsonData);
 });
 
 /*
