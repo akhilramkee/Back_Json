@@ -9,7 +9,6 @@ const fs = require('fs');
 
 const upload = multer({storage:multer.memoryStorage()})
 
-
 app.use(cookieparser());
 app.use(express.json())
 app.use(session({
@@ -39,6 +38,21 @@ app.post('/upload',upload.single('file'),(req,res)=>{
     req.session.jsonData[key] = value;
     res.status(200).json(req.session.jsonData);
 });
+
+/*
+app.get('/download',(req,res)=>{
+    files = []
+    Object.entries(req.session.jsonData).forEach(function([key,value]){
+        files.push(key+'.json');
+        let data = JSON.stringify(value);
+        fs.writeFileSync(key+'.json',data);
+        var file = fs.createWriteStream(key+'.json')
+        res.on('finish',function(){
+
+        }).pipe(file)
+    });
+})*/
+
 
 app.get('/purge',(req,res)=>{
     if(req.session.jsonData){
