@@ -13,8 +13,6 @@ const upload = multer({storage:multer.memoryStorage()})
 app.use(cookieparser());
 app.use(express.json())
 app.use(session({
-    resave:false,
-    saveUninitialized:false,
     secret:'trolololo',
 }));
 
