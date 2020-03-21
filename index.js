@@ -6,6 +6,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 var cors = require('cors');
+var MemcachedStore = require('connect-memjs')(session);
+
 
 
 const upload = multer({storage:multer.memoryStorage()})
@@ -16,6 +18,10 @@ app.use(session({
     resave:false,
     saveUninitialized:false,
     secret:'trolololo',
+    store: new MemcachedStore({
+        servers: [process.env.MEMCACHIER_SERVERS],
+        prefix: '_session_'
+    })
 }));
 
 app.use(cors({credentials:true,origin:'http://localhost:3000'}))
