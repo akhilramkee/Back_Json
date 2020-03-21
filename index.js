@@ -18,7 +18,12 @@ app.use(session({
     secret:'trolololo',
 }));
 
-app.use(cors({credentials:true,origin:'http://localhost:3000'}))
+const corsOptions = {
+    'origin': true,
+    'credentials': true,
+  }
+  app.options('*', cors(corsOptions))
+  app.use(cors(corsOptions))
 
 app.use(express.urlencoded({extended:false}))
 
