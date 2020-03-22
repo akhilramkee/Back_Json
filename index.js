@@ -29,11 +29,19 @@ app.get('/',(req,res)=>{
 
 app.post('/upload',upload.single('file'),(req,res)=>{
     if(!req.session.jsonData){
-        req.session.jsonData ={}
+        req.session.jsonData =[]
     }
+    let flag=0;
     let key = req.file.originalname.replace('.json','');
     let value = JSON.parse(req.file.buffer.toString('utf-8'));
-    req.session.jsonData[key] = value;
+    value['language'] = key;
+    req.session.jsonData.forEach(function(item,index){
+        if(item['language'] === key){
+            req.session.jsonData[index] = value; 
+            flag=1;
+        }        
+    })
+    if(flag==0) req.session.jsonData.push(value)
     res.status(200).json(req.session.jsonData);
 });
 
