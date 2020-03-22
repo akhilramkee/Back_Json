@@ -25,3 +25,6 @@ heroku create
 ```
 git push heroku master
 ```
+
+## Change Origin to support your react Heroku
+
